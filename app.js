@@ -12,28 +12,64 @@ const render = require("./lib/htmlRenderer");
 
 const questions = [
   {
-    type: 'input'
-    name: 'name'
+    type: 'input',
+    name: 'name',
     message: 'Name: '
   },
   {
-    type: 'input'
-    name: 'id'
+    type: 'input',
+    name: 'id',
     message: 'id: '
   },
   {
-    type:'input'
-    name:'email'
+    type:'input',
+    name:'email',
     message: 'Email: '
   },
   {
-    type: 'list'
-    name: 'role'
-    message: 'Role: '
-    choices: ['Employee', 'Engineer', 'Intern', 'Manager']
-  },
+    type: 'list',
+    name: 'role',
+    message: 'Role: ',
+    choices: ['Engineer', 'Intern', 'Manager'],
+  }
 ]
+
+inquirer
+.prompt(questions)
+  .then((answer) => {
+    if (answer.role === 'Engineer') {
+      inquirer.prompt({
+        type: 'input',
+        name: 'github',
+        message: 'Github Username: ',
+      })
+    } else if (answer.role === 'Intern') {
+      inquirer.prompt({
+        type: 'input',
+        name: 'school',
+        message: 'School: ',
+      })
+    } else {
+      inquirer.prompt({
+        type: 'input',
+        name: 'officeNumber',
+        message: 'Office Number: ',
+      }) 
+    }
+  });
+
+
 // Write code to use inquirer to gather information about the development team members,
+function writeToFile(fileName, data) {
+  fs.writeFile(fileName, data, err => {
+    if (err) {
+      return console.log(err);
+    }
+
+    console.log("File written successfully!")
+  });
+}
+
 // and to create objects for each team member (using the correct classes as blueprints!)
 
 // After the user has input all employees desired, call the `render` function (required
