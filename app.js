@@ -5,6 +5,7 @@ const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 
+
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
@@ -37,45 +38,47 @@ function runQuestions() {
       },
     ])
   .then((answer) => {
-    // if engineer role selected, prompt for github name //
+// if engineer role selected, prompt for github name //
         if (answer.role === 'Engineer') {
     inquirer.prompt({
       type: 'input',
       name: 'github',
       message: 'Github Username: ',
     })
-    // Create new Engi //
+// Create new Engi //
     .then(newAnswer => {
       newEmployees.push(new Engineer(answer.name, answer.id, answer.email, newAnswer.github))
     continuity();
     })
-    // if intern selected prompt user for school name //
+// if intern selected prompt user for school name //
   } if (answer.role === 'Intern') {
     inquirer.prompt({
       type: 'input',
       name: 'school',
       message: 'School: ',
     })
-    // create new intern //
+// create new intern //
     .then(newAnswer => {
       newEmployees.push(new Intern(answer.name, answer.id, answer.email, newAnswer.school))
       continuity();
     })
-    // if manager role selected prompt user for offfice number //
+// if manager role selected prompt user for offfice number //
   } if (answer.role === 'Manager') {
     inquirer.prompt({
       type: 'input',
       name: 'officeNumber',
       message: 'Office Number: ',
     })
-    // create new manager //
+ // create new manager //
     .then(newAnswer => {
       newEmployees.push(new Manager(answer.name, answer.id, answer.email, newAnswer.officeNumber))
       continuity();
   });
 }
 })
+
 }
+
 
 
 
@@ -87,26 +90,28 @@ function continuity() {
     message: 'Are You Finished?'
   }).then((answer) => {
     if (answer.complete) {
-      // After the user has input all employees desired, call the `render` function (required
-     // above) and pass in an array containing all employee objects; the `render` function will
-    // generate and return a block of HTML including templated divs for each employee!
+// After the user has input all employees desired, call the `render` function (required
+ // above) and pass in an array containing all employee objects; the `render` function will
+// generate and return a block of HTML including templated divs for each employee!
       render(newEmployees)
+// write it to a file named`team.html` in the output` folder. You can use the variable `outputPath` above target this location.
+      fs.mkdir('output', { recursive: true }, (err) => {
+        if (err) throw err;
+      });
+      fs.writeFile('./output/team.html', render(newEmployees), err => {
+        if (err) {          return console.log(err);
+        }
+
+        console.log("File written successfully!")
+      });
+
       return
     } else {
       runQuestions();
     }
   })
 }
-
-function writeToFile(fileName, data) {
-  fs.writeFile('team.html', , err => {
-    if (err) {
-      return console.log(err);
-    }
-
-    console.log("File written successfully!")
-  });
-}
+ 
 
 
 runQuestions();
